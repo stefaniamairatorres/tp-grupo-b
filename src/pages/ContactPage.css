@@ -1,0 +1,52 @@
+/* Estos estilos son específicos para la página de contacto */
+
+.form-card {
+    background-color: var(--color-card);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-title {
+    text-align: center;
+    color: var(--color-accent);
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--color-text-light);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-dark);
+    color: var(--color-text-light);
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(0, 191, 165, 0.3);
+}
+
+.btn-form {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}

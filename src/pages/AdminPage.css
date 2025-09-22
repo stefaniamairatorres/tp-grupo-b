@@ -1,0 +1,98 @@
+.admin-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.admin-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  color: var(--color-accent);
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.tab-btn {
+  background-color: var(--color-card);
+  color: var(--color-text-light);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.tab-btn:hover {
+  background-color: var(--color-dark);
+}
+
+.tab-btn.active {
+  background-color: var(--color-accent);
+  color: var(--color-dark);
+  font-weight: bold;
+  border-color: var(--color-accent);
+}
+
+.tab-content {
+  background-color: var(--color-card);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.admin-card {
+  /* Ya definidos en pages.css, pero puedes añadir estilos específicos aquí */
+  background-color: var(--color-card);
+  border-radius: 10px;
+}
+
+.product-list {
+  margin-top: 20px;
+}
+
+.product-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.product-list th,
+.product-list td {
+  padding: 12px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.product-list th {
+  font-weight: bold;
+  color: var(--color-accent);
+}
+
+.product-list tr:hover {
+  background-color: var(--color-dark);
+}
+
+.btn-edit, .btn-delete {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+  font-weight: 500;
+}
+
+.btn-edit {
+  background-color: #55aaff;
+  color: #fff;
+}
+
+.btn-delete {
+  background-color: #ff5555;
+  color: #fff;
+}
