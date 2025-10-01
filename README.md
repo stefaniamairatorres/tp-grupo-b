@@ -85,7 +85,3 @@ Faliveni Analia
 Millapan Damian Alejandro
 
 Casafus Franco Miguel
-
-La Fuente Joel
-
-Arevalos Fabas Leila Abigail
