@@ -1,5 +1,5 @@
-¡Bienvenido a nuestra Tienda Online!
-Este es el proyecto frontend de un e-commerce que creamos como trabajo final de Programación Web. La idea es que te sientas en una tienda real, pero con la magia de una Aplicación de una Sola Página (SPA) construida con React.
+¡Bienvenido a nuestra Tienda Online! Gropo B
+Este es el proyecto frontend de un e-commerce que creamos como trabajo final de Programación Web. La idea es que te sientas en una tienda real, pero con una Aplicación de una Sola Página (SPA) construida con React.
 
 ¿Qué podes realizar aquí?
 Entrar, Registrarte y Ser Administrador: Tienes tu propio espacio para iniciar sesión o registrarte. Una vez que entras como administrador.
@@ -78,10 +78,8 @@ npm run dev
 
 Nuestro Equipo:
 
-Torres Maira Stefania
+* Torres Maira Stefania
 
-Faliveni Analia
+* Millapan Damian Alejandro
 
-Millapan Damian Alejandro
-
-Casafus Franco Miguel
+* Casafus Franco Miguel
