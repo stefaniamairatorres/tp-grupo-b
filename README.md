@@ -76,10 +76,6 @@ npm install
 Inicia el servidor:
 npm run dev
 
-Nuestro Equipo:
+Equipo:
 
 * Torres Maira Stefania
-
-* Millapan Damian Alejandro
-
-* Casafus Franco Miguel
