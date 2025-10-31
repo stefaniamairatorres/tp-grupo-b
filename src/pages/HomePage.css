@@ -65,3 +65,21 @@
   font-size: 1.5rem;
   color: var(--color-text-dark);
 }
+
+/* * --- NUEVOS ESTILOS AÑADIDOS PARA CENTRAR Y PROLIJAR LA DESCRIPCIÓN ---
+ */
+
+.category-card p {
+  /* 1. Limita el ancho del texto para evitar que se estire y se vea desprolijo */
+  max-width: 90%; 
+  
+  /* 2. Centra el bloque de texto limitado (el max-width) dentro de la tarjeta */
+  margin-left: auto;
+  margin-right: auto;
+  
+  /* 3. Centra el texto línea por línea */
+  text-align: center; 
+  
+  /* Opcional: Ajusta el espaciado superior */
+  padding-top: 10px; 
+}

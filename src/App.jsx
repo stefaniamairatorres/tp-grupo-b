@@ -11,44 +11,52 @@ import ProductPage from './pages/ProductPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import { useAuth } from './context/AuthContext';
+// 🚨 NUEVAS IMPORTACIONES PARA EL PAGO 🚨
+import SuccessPage from './pages/SuccessPage';
+import FailurePage from './pages/FailurePage';
+
 
 // Componente para proteger rutas que requieren autenticación
 const ProtectedRoute = ({ children }) => {
-  const { isLoggedIn } = useAuth();
-  if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
 };
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Header />
-      <main className="main-content">
-       <Routes>
-  <Route path="/" element={<HomePage />} />
-  <Route path="/products" element={<ProductPage />} />
-  <Route path="/products/:id" element={<ProductDetailPage />} />
-  {/* <Route path="/category" element={<CategoryPage />} />  <-- ¡Elimina esta línea! */}
-  <Route path="/category/:categoryName" element={<CategoryPage />} /> {/* Deja solo la ruta dinámica */}
-  <Route path="/contact" element={<ContactPage />} />
-  <Route path="/login" element={<LoginPage />} />
-  <Route path="/register" element={<RegisterPage />} />
-  <Route path="/carrito" element={<CartPage />} />
+  return (
+    <BrowserRouter>
+      <Header />
+      <main className="main-content">
+       <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<ProductPage />} />
+            <Route path="/products/:id" element={<ProductDetailPage />} />
+            <Route path="/category/:categoryName" element={<CategoryPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/carrito" element={<CartPage />} />
 
-  <Route 
-    path="/admin" 
-    element={
-      <ProtectedRoute>
-        <AdminPage />
-      </ProtectedRoute>
-    } 
-  />
-</Routes> 
-      </main>
-    </BrowserRouter>
-  );
+            {/* 🚨 RUTAS DE RESPUESTA DE MERCADO PAGO 🚨 */}
+            <Route path="/success" element={<SuccessPage />} />
+            <Route path="/failure" element={<FailurePage />} />
+
+            <Route 
+                path="/admin" 
+                element={
+                    <ProtectedRoute>
+                        <AdminPage />
+                    </ProtectedRoute>
+                } 
+            />
+        </Routes> 
+      </main>
+    </BrowserRouter>
+  );
 }
 
 export default App;

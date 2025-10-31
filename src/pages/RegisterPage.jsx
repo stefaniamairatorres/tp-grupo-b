@@ -1,92 +1,101 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext.jsx'; // Importación ajustada
 import './pages.css';
 
 const RegisterPage = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth(); // Usamos la función login para simular el registro
-  const navigate = useNavigate();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
+    
+    const { login } = useAuth(); 
+    const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Aquí iría la lógica para enviar los datos a una API de registro.
-    // Por ahora, simulamos un registro exitoso y logueamos al usuario.
-    const userData = {
-      firstName,
-      lastName,
-      email,
-      password,
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+        
+        const userData = {
+            nombre: `${firstName} ${lastName}`, 
+            email,
+            password,
+        };
+
+        try {
+            // Llama al endpoint de registro en el backend
+            const response = await axios.post('http://localhost:5000/api/users/register', userData);
+            
+            // El backend devuelve el objeto user {_id, nombre, email}
+            const user = response.data;
+
+            // 1. Inicia sesión automáticamente usando el contexto
+            login(user); 
+            
+            // 2. Redirige a la página principal
+            navigate('/'); 
+
+        } catch (err) {
+            const errorMessage = err.response && err.response.data.message 
+                               ? err.response.data.message 
+                               : 'Error. No se pudo completar el registro.';
+            setError(errorMessage);
+        }
     };
-    console.log('Datos de registro:', userData);
-    
-    // Una vez que el registro es exitoso, logueamos al usuario
-    // Nota: En una aplicación real, aquí harías una llamada a la API
-    // y luego, si la respuesta es exitosa, llamarías a `login`.
-    login({ name: `${firstName} ${lastName}`, email });
-    
-    navigate('/'); // Redirige a la página de inicio
-  };
 
-  return (
-    <div className="page-container flex-center">
-      <div className="form-card">
-        <h1 className="form-title">Crear una cuenta</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="firstName">Nombre</label>
-            <input
-              type="text"
-              id="firstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Tu nombre"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="lastName">Apellido</label>
-            <input
-              type="text"
-              id="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Tu apellido"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Tu email"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Contraseña"
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-primary btn-form">
-            Registrarse
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+    return (
+        <div className="page-container flex-center">
+            <div className="form-card">
+                <h1 className="form-title">Crear una cuenta</h1>
+                
+                {error && <div className="error-message">{error}</div>}
+                
+                <form onSubmit={handleSubmit} className="register-form">
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            placeholder="Nombre(s)"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            placeholder="Apellido(s)"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <input
+                            type="email"
+                            placeholder="Correo electrónico"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <input
+                            type="password"
+                            placeholder="Contraseña"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-primary btn-form">
+                        Registrarse
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
 };
 
 export default RegisterPage;

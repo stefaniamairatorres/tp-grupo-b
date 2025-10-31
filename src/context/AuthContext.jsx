@@ -1,36 +1,61 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import axios from 'axios';
 
-// 1. Crea el contexto
 const AuthContext = createContext();
 
-// 2. Crea el proveedor del contexto
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+    // 1. Inicializa el estado 'user' leyendo desde localStorage
+    // Si hay datos de usuario guardados, los carga.
+    const [user, setUser] = useState(() => {
+        const userInfo = localStorage.getItem('userInfo');
+        return userInfo ? JSON.parse(userInfo) : null;
+    });
+    const [isLoading, setIsLoading] = useState(false);
 
-  const login = (userData) => {
-    // Aquí iría la lógica para autenticar al usuario
-    // Por ahora, solo simulamos un login exitoso
-    setIsLoggedIn(true);
-    setUser(userData);
-    console.log('Usuario logueado:', userData);
-  };
+    // 2. Función LOGIN: Guarda los datos del usuario en el estado y localStorage.
+    // Llamada desde RegisterPage/LoginPage al recibir la respuesta exitosa del backend.
+    const login = (userData) => {
+        // userData debe ser el objeto que el backend devuelve: {_id, nombre, email}
+        localStorage.setItem('userInfo', JSON.stringify(userData));
+        setUser(userData);
+        // Nota: Asumimos que el backend ya estableció la cookie 'jwt'
+    };
 
-  const logout = () => {
-    // Lógica para cerrar la sesión
-    setIsLoggedIn(false);
-    setUser(null);
-    console.log('Sesión cerrada');
-  };
+    // 3. Función LOGOUT: Cierra la sesión.
+    const logout = async () => {
+        setIsLoading(true);
+        try {
+            // Llama al endpoint de logout en el backend (debe limpiar la cookie 'jwt')
+            await axios.post('http://localhost:5000/api/users/logout');
+            
+            // Limpia el estado y el almacenamiento local en el frontend
+            localStorage.removeItem('userInfo');
+            setUser(null);
+        } catch (error) {
+            console.error("Error al cerrar sesión en el backend:", error);
+            // Incluso si el backend falla, forzamos el cierre de sesión local
+            localStorage.removeItem('userInfo');
+            setUser(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-  return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    // 4. Proveedor del contexto (permite acceder a los valores desde cualquier componente)
+    return (
+        <AuthContext.Provider value={{ user, login, logout, isLoading, isLoggedIn: !!user }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
-// 3. Crea un hook personalizado para usar el contexto fácilmente
 export const useAuth = () => {
-  return useContext(AuthContext);
+    // 5. Hook personalizado para usar el contexto
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth debe ser usado dentro de un AuthProvider');
+    }
+    return context;
 };
+
+export default AuthContext;

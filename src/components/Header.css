@@ -73,20 +73,44 @@
   color: var(--color-dark);
 }
 
+
+/* 1. Contenedor del Icono de Carrito */
 .cart-icon-link {
-  position: relative;
-  font-size: 1.8rem;
-  padding: 0 15px;
+    /* Mantenemos la posición relativa para que el badge se posicione correctamente */
+    position: relative; 
+    
+    /* Centramos el icono (si hay texto cerca) y le damos un tamaño adecuado */
+    display: flex;
+    align-items: center;
+    font-size: 1.8rem;
+    padding: 0 15px;
+    
+    /* Ajuste para que el texto de enlace se vea bien con el icono */
+    line-height: 1; 
 }
 
+/* 2. El Contador de Ítems (El Badge) */
 .cart-item-count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: var(--color-accent);
-  color: var(--color-dark);
-  border-radius: 50%;
-  padding: 2px 7px;
-  font-size: 0.8rem;
-  font-weight: bold;
+    /* Posicionamiento del Badge */
+    position: absolute;
+    top: -8px; /* Mueve un poco más arriba para que no se pegue al borde */
+    right: 5px; /* Ajuste para que el centro del número quede justo sobre la esquina del icono */
+    
+    /* Estética y Centrado */
+    background-color: #ff4757; /* Usando un color más estándar para alerta (puedes usar var(--color-accent) si prefieres) */
+    color: white; /* Color de texto blanco para contraste */
+    border-radius: 50%; /* Asegura que la forma sea circular */
+    
+    /* Control de Tamaño y Centrado del Número */
+    padding: 2px; /* Reducimos el padding general */
+    min-width: 20px; /* Establecemos un tamaño mínimo para un círculo perfecto */
+    height: 20px; /* Hacemos que la altura coincida con el ancho */
+    display: flex; /* Usamos flexbox para centrar el número */
+    justify-content: center;
+    align-items: center;
+    
+    /* Tipografía */
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 10; /* Asegura que el contador esté por encima de otros elementos */
 }

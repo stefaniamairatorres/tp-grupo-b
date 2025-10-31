@@ -1,56 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import axios from 'axios'; 
 import ProductCard from '../components/ProductCard';
 import './pages.css';
 
 const CategoryPage = () => {
-  const { categoryName } = useParams();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { categoryName } = useParams(); // Ej: 'vinos'
+  
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`https://fakestoreapi.com/products/category/${categoryName}`);
-        setProducts(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError('No se pudieron cargar los productos de esta categoría.');
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null); // Limpiar errores
 
-    if (categoryName) {
-      fetchProducts();
-    } else {
-      // Si la URL no tiene un nombre de categoría, muestra un mensaje de error.
-      setError('Categoría no encontrada. Por favor, regrese a la página principal.');
-      setLoading(false);
-    }
-  }, [categoryName]);
+      try {
+        // 1. Traer TODOS los productos del backend
+        const response = await axios.get(`http://localhost:5000/api/products`); 
+        const allProducts = response.data;
 
-  if (loading) {
-    return <div className="page-container text-center"><p>Cargando productos...</p></div>;
-  }
+        // 2. Lógica de Filtrado (El Paso Clave)
+        let filteredProducts = [];
 
-  if (error) {
-    return <div className="page-container text-center"><p className="error-message">{error}</p></div>;
-  }
+        if (categoryName) {
+            // Si hay un categoryName en la URL (ej. /category/licores), filtramos:
+            filteredProducts = allProducts.filter(product => {
+                // El campo product.category ahora es un objeto gracias al populate
+                // Verificamos que exista y que el nombre de la categoría coincida con la URL
+                return product.category && 
+                       product.category.name.toLowerCase() === categoryName.toLowerCase();
+            });
+        } else {
+            // Si no hay categoryName (Ej: /products), mostramos todos
+            filteredProducts = allProducts;
+        }
+        
+        setProducts(filteredProducts);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error al cargar o filtrar productos:", err);
+        setError('No se pudieron cargar los productos. Asegúrate de que el servidor Express esté activo.');
+        setLoading(false);
+      }
+    };
 
-  return (
-    <div className="page-container">
-      <h1 style={{ textAlign: 'center' }}>{categoryName.toUpperCase()}</h1>
-      <p style={{ textAlign: 'center', color: '#ccc' }}>Encuentra los mejores productos de {categoryName}</p>
-      <div className="product-grid">
-        {products.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </div>
-  );
+    fetchProducts();
+  }, [categoryName]); // Vuelve a ejecutar cuando la categoría en la URL cambia
+
+  // --- Renderizado Final ---
+
+  return (
+    <div className="page-container">
+      <h1 style={{ textAlign: 'center' }}>{categoryName ? categoryName.toUpperCase() : "TODOS LOS PRODUCTOS"}</h1>
+      <p style={{ textAlign: 'center', color: '#ccc' }}>Mostrando {products.length} productos.</p>
+      
+      {products.length === 0 && !loading && (
+            <div className="text-center"><p>No hay productos disponibles en esta categoría.</p></div>
+        )}
+
+      <div className="product-grid">
+        {products.map(product => (
+          <ProductCard key={product._id} product={product} /> 
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default CategoryPage;
