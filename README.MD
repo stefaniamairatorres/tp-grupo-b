@@ -1,8 +1,9 @@
 # E-Commerce de Bebidas y Coctelería: Frontend
 
 ## ¡Bienvenidos a la Tienda Online!
+## ¡Barwoman Maira!
 
-Este es el proyecto frontend de un e-commerce que creamos como **Trabajo Final Integrador de Programación Web**. Nuestro objetivo fue simular una tienda real con la magia de una Aplicación de una Sola Página (SPA) construida con **React**.
+Este es el proyecto frontend de un e-commerce que cree como **Trabajo Final Integrador de Programación Web**. Mi objetivo fue simular una tienda real con la magia de una Aplicación de una Sola Página (SPA) construida con **React**.
 
 ### ✨ ¿Qué podés realizar aquí?
 
@@ -13,7 +14,7 @@ Este es el proyecto frontend de un e-commerce que creamos como **Trabajo Final I
 
 ### 🛒 Estado del Carrito (Pendiente de Conexión Final)
 
-Hemos implementado la **lógica base del carrito** (`CartContext`) con las funciones de `addToCart`, `removeFromCart` y cálculo de totales.
+Implemente la **lógica base del carrito** (`CartContext`) con las funciones de `addToCart`, `removeFromCart` y cálculo de totales.
 
 **Estado Actual:** La gestión de productos en el carrito funciona 100% en el frontend.
 **Próximo Paso:** Falta conectar el botón de "Finalizar Compra" con el *endpoint* de `POST /api/purchases` del Backend para persistir la transacción y actualizar el stock.
@@ -39,7 +40,7 @@ El código fuente completo está en GitHub.
 
 ## Cómo Ponerlo a Correr
 
-¡Es muy fácil! Asegúrate de que el **Backend esté activo** (`npm start` en la carpeta backend) y sigue estos tres pasos:
+¡Es muy fácil! Asegúrar de que el **Backend esté activo** (`npm start` en la carpeta backend) y sigue estos tres pasos:
 
 1.  **Clona este repositorio:**
     ```bash
