@@ -44,7 +44,7 @@ El código fuente completo está en GitHub.
 
 1.  **Clona este repositorio:**
     ```bash
-    git clone <URL_DEL_REPOSITORIO>
+    git clone <https://github.com/stefaniamairatorres/tp-grupo-b.git>
     ```
 
 2.  **Instala las dependencias:**
