@@ -1,14 +1,13 @@
-¡Bienvenido a nuestra Tienda Online! Gropo B
-Este es el proyecto frontend de un e-commerce que creamos como trabajo final de Programación Web. La idea es que te sientas en una tienda real, pero con una Aplicación de una Sola Página (SPA) construida con React.
+¡Bienvenido a mi Tienda Online! 
+Este es el proyecto frontend de un e-commerce que cree como trabajo final de Programación Web. La idea es que te sientas en una tienda real, pero con una Aplicación de una Sola Página.
 
 ¿Qué podes realizar aquí?
 Entrar, Registrarte y Ser Administrador: Tienes tu propio espacio para iniciar sesión o registrarte. Una vez que entras como administrador.
 
-Gestión de Inventario (ABMC): Desde el panel de administrador, puedes dar de Alta, Baja, Modificar y Consultar productos. Y como pensamos en grande, las listas de productos tienen paginación para que sea fácil navegar por cientos de ítems.
+Gestión de Inventario (ABMC): Desde el panel de administrador, puedes dar de Alta, Baja, Modificar y Consultar productos.
 
-Navegación Mágica: Gracias a React Router, pasarás de la página de inicio a la de productos, o de una categoría a otra, sin recargar la página. ¡Es una experiencia súper fluida!
 
-Todo conectado con Hooks: Usamos los Hooks más importantes de React, como useState y useEffect, para que la aplicación funcione como un reloj suizo. Con useContext, el estado de la autenticación y el carrito está siempre al día, sin importar en qué parte de la tienda estés.
+Todo conectado con Hooks: Utilice los Hooks más importantes de React, como useState y useEffect, para que la aplicación funcione. Con useContext, el estado de la autenticación y el carrito está siempre al día, sin importar en qué parte de la tienda estés.
 
 Bajo el capó (Tecnologías)
 Frontend: React.js ⚛️
