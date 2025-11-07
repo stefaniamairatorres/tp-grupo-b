@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(true);
         try {
             // Llama al endpoint de logout en el backend (debe limpiar la cookie 'jwt')
-            await axios.post('http://localhost:5000/api/users/logout');
+            await axios.post('/api/users/logout');
             
             // Limpia el estado y el almacenamiento local en el frontend
             localStorage.removeItem('userInfo');
