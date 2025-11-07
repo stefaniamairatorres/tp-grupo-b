@@ -16,7 +16,7 @@ const ProductDetailPage = () => {
     const fetchProduct = async () => {
       try {
         // !!! CAMBIO CRÍTICO 1: USAR TU PROPIA API DE EXPRESS !!!
-        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        const response = await axios.get(`/api/products/${id}`);
         
         setProduct(response.data);
       } catch (err) {
