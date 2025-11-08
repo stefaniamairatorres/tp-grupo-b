@@ -1,3 +1,14 @@
 
-/* /index.html 200https://tp-back-final.onrender.com
+
+Regla de redirección para la API (Mantiene el mismo dominio)
+
+/api/* https://tp-back-final.onrender.com/:splat 200
+
+Regla de Fallback para Single Page Application (SPA)
+
+Esto asegura que todas las rutas desconocidas sean redirigidas a index.html
+
+para que el Router de React pueda manejarlas.
+
+/* /index.html 200
 
