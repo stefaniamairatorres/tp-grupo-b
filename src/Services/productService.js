@@ -1,6 +1,10 @@
+console.log("🌐 API base URL:", import.meta.env.VITE_API_URL);
+
 import axios from 'axios';
 
-const API_URL = '/api/products';
+// Usa la variable del .env o localhost como respaldo
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = `${BASE_URL}/api/products`;
 
 // Obtiene todos los productos
 const getAllProducts = async () => {
