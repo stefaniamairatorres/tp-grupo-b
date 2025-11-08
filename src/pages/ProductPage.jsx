@@ -11,12 +11,13 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // !!! CAMBIO CRÍTICO: APUNTAR A TU BACKEND DE EXPRESS !!!
-const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`);
+        // CORRECCIÓN CLAVE: Usamos la ruta relativa. Netlify redirigirá '/api/products'
+        // a https://tp-back-final.onrender.com/api/products
+        const response = await axios.get('/api/products');
         
         setProducts(response.data);
       } catch (err) {
-        // Si ves este error, tu servidor Express no está corriendo
+        // Mensaje genérico de fallo de conexión
         setError('No se pudieron cargar los productos. Asegúrate de que tu servidor Express esté corriendo.');
         console.error('Error fetching products from Express API:', err);
       } finally {
@@ -40,7 +41,6 @@ const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`)
       <p style={{ textAlign: 'center', color: '#ccc' }}>Encuentra lo que buscas en nuestra tienda</p>
       <div className="product-grid">
         {products.map(product => (
-  
           <ProductCard key={product._id} product={product} /> 
         ))}
       </div>
