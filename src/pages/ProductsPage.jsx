@@ -14,19 +14,25 @@ const ProductPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(8); // Número de productos por página
 
+  // URL del backend desde .env
+  const BASE_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('https://fakestoreapi.com/products');
+        console.log("📡 Cargando productos desde:", `${BASE_URL}/api/products`);
+        const response = await axios.get(`${BASE_URL}/api/products`);
         setProducts(response.data);
-        setLoading(false);
       } catch (err) {
+        console.error("Error al cargar productos:", err);
         setError('No se pudieron cargar los productos.');
+      } finally {
         setLoading(false);
       }
     };
+
     fetchProducts();
-  }, []);
+  }, [BASE_URL]);
 
   if (loading) {
     return <div className="page-container text-center"><p>Cargando productos...</p></div>;
@@ -38,7 +44,7 @@ const ProductPage = () => {
 
   // Lógica de filtrado de búsqueda
   const filteredProducts = products.filter(product =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    product.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Lógica de paginación
@@ -54,9 +60,10 @@ const ProductPage = () => {
     <div className="page-container">
       <h1 style={{ textAlign: 'center' }}>Todos los productos</h1>
       <p style={{ textAlign: 'center', color: '#ccc' }}>Encuentra lo que buscas en nuestra tienda</p>
+      
       <div className="product-grid">
         {currentProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product._id || product.id} product={product} />
         ))}
       </div>
 
