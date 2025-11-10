@@ -1,0 +1,23 @@
+[build]
+
+Carpeta donde Vite pone la app compilada
+
+publish = "dist"
+
+Comando para compilar la app de React
+
+command = "npm run build"
+
+[[redirects]]
+
+Esto le dice a Netlify: para cualquier ruta...
+
+from = "/*"
+
+...carga el index.html
+
+to = "/index.html"
+
+...y devuelve un estado 200 (OK), permitiendo que React Router maneje la ruta
+
+status = 200
