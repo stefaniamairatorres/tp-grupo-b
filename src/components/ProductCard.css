@@ -49,3 +49,34 @@
   font-size: 0.95rem;
   padding: 10px 0 5px 0;
 }
+
+/* --- Nuevos Estilos para el Feedback Visual (Pulsación) --- */
+
+/* 1. Transición: Hace que todos los cambios de estado sean suaves y rápidos */
+.add-to-cart-btn {
+    /* Mantenemos el color original */
+    background-color: #1abc9c; 
+    /* Añadimos la transición para suavizar el efecto */
+    transition: all 0.15s ease-out; 
+    /* El resto de tus estilos de botón... */
+}
+
+/* 2. Estado 'Pulsado': Lo que ocurre cuando se hace clic */
+.add-to-cart-btn.clicked {
+    /* Fondo ligeramente más oscuro para indicar la pulsación */
+    background-color: #146C43; 
+    /* Efecto de pulsación: el botón se encoge un 5% brevemente */
+    transform: scale(0.95); 
+    /* Desactivar la sombra para simular que está "presionado" */
+    box-shadow: none;
+}
+
+/* 3. Estado 'Hover': Mejora la experiencia al pasar el mouse */
+.add-to-cart-btn:hover:not(.clicked) {
+    /* Color ligeramente más claro en hover */
+    background-color: #1abc9c; 
+    /* Pequeño escalado al pasar el mouse */
+    transform: scale(1.02); 
+    /* Añade una sombra sutil */
+    box-shadow: 0 0 10px rgba(26, 188, 156, 0.5);
+}
