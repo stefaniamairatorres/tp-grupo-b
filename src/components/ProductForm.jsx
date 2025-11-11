@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import './ProductForm.css'; // Lo crearemos en el siguiente paso
+import './ProductForm.css'; 
 
 const ProductForm = ({ initialData, onSave, onCancel }) => {
   const [formData, setFormData] = useState(
     initialData || {
-      title: '',
+      // *** CORRECCIÓN CLAVE: Usamos 'name' en lugar de 'title' ***
+      name: '', 
       price: '',
       description: '',
       category: '',
@@ -22,19 +23,28 @@ const ProductForm = ({ initialData, onSave, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+    
+    // Convertimos el precio a número antes de enviar (por si acaso el backend lo espera así)
+    const dataToSend = {
+        ...formData,
+        price: parseFloat(formData.price),
+    };
+
+    // La función onSave se encarga de llamar a la API
+    onSave(dataToSend);
   };
 
   return (
     <div className="product-form-container">
       <form onSubmit={handleSubmit} className="product-form">
         <div className="form-group">
-          <label htmlFor="title">Título</label>
+          {/* *** CORRECCIÓN: El atributo 'htmlFor' y 'name' usan 'name' *** */}
+          <label htmlFor="name">Título / Nombre</label>
           <input
             type="text"
-            id="title"
-            name="title"
-            value={formData.title}
+            id="name"
+            name="name" // Este es el campo que el backend de Express probablemente espera
+            value={formData.name}
             onChange={handleChange}
             placeholder="Título del producto"
             required
