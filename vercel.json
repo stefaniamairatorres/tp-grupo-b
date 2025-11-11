@@ -1,5 +1,8 @@
 {
   "buildCommand": "chmod +x ./node_modules/.bin/vite && npm run build",
   "outputDirectory": "dist",
-  "framework": "vite"
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://tp-back-final.onrender.com/api/$1" }
+  ]
 }
