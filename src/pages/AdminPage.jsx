@@ -16,7 +16,6 @@ const AdminPage = () => {
 
     // Función para obtener productos (uso useCallback para poder llamarla después de guardar/eliminar)
     const fetchProducts = useCallback(async () => {
-        // [CORRECCIÓN CRÍTICA: Se eliminó la línea "await fetchProducts();" que causaba recursión infinita.]
         try {
             setLoading(true);
             // Uso de la ruta relativa /api/products para que Vercel redirija a Render
@@ -24,6 +23,7 @@ const AdminPage = () => {
             
             setProducts(response.data);
             setError(null);
+            setSaveStatus({ message: '', type: '' }); // Limpiar estado de guardado
         } catch (err) {
             setError('Error al cargar productos. Revisa la conexión con el servidor (Render).');
             console.error('Error fetching admin products:', err);
@@ -31,52 +31,58 @@ const AdminPage = () => {
         } finally {
             setLoading(false);
         }
-    }, []); 
+    }, []);
 
     useEffect(() => {
-        // Esta es la única llamada a fetchProducts() que debe ocurrir al inicio
         fetchProducts();
     }, [fetchProducts]); 
 
     // 2. FUNCIÓN REAL DE GUARDADO/ACTUALIZACIÓN
     const handleSaveProduct = async (productData, isEditing) => {
         try {
+            let response;
+            
             // Mostrar mensaje de carga mientras se envía
             setSaveStatus({ message: isEditing ? 'Actualizando producto...' : 'Creando producto...', type: 'info' });
 
             if (isEditing && editingProduct?._id) {
                 // Lógica de ACTUALIZACIÓN (PUT)
-                await axios.put(`/api/products/${editingProduct._id}`, productData);
+                // Usamos productData que DEBE ser FormData (si incluye archivo) o un objeto.
+                response = await axios.put(`/api/products/${editingProduct._id}`, productData, {
+                    // Si el backend espera FormData (por ejemplo, con Multer para la imagen),
+                    // es mejor no especificar el Content-Type, Axios y el navegador lo harán.
+                });
                 setSaveStatus({ message: 'Producto actualizado con éxito.', type: 'success' });
             } else {
                 // Lógica de CREACIÓN (POST)
-                await axios.post('/api/products', productData);
+                response = await axios.post('/api/products', productData, {
+                    // Si el backend espera FormData (por ejemplo, con Multer para la imagen)
+                });
                 setSaveStatus({ message: 'Producto creado con éxito.', type: 'success' });
             }
 
             // Recargar la lista de productos para ver el nuevo/editado
             await fetchProducts(); 
             
-            // Volver a la lista después de guardar (con un pequeño retraso para que el usuario vea el mensaje de éxito)
-            setTimeout(() => {
-                setEditingProduct(null);
-                setActiveTab('list');
-            }, 500);
+            // Volver a la lista después de guardar
+            setEditingProduct(null);
+            setActiveTab('list');
 
         } catch (err) {
             console.error('Error al guardar o actualizar el producto:', err);
             // Mensaje de error detallado
             const errorMessage = err.response?.data?.message || `Error al guardar: ${err.message}. Revisa la consola para más detalles.`;
             setSaveStatus({ message: errorMessage, type: 'error' });
+            // EVITAR PANTALLA NEGRA: Si falla, solo mostramos el error, no colapsamos.
         }
     };
 
     // 3. FUNCIÓN REAL DE ELIMINACIÓN
     const handleDeleteProduct = async (id) => {
-        // IMPORTANTE: Usamos window.confirm por simplicidad. En producción se usaría un modal.
+        // CORRECCIÓN: Usar un modal o un mensaje dentro del UI en lugar de window.confirm()
+        // Por simplicidad, mantendremos window.confirm, pero en producción se evita.
         if (window.confirm('¿Estás seguro de eliminar este producto?')) {
             try {
-                setSaveStatus({ message: 'Eliminando producto...', type: 'info' });
                 await axios.delete(`/api/products/${id}`);
                 setSaveStatus({ message: 'Producto eliminado con éxito.', type: 'success' });
                 // Recargar la lista
@@ -91,7 +97,6 @@ const AdminPage = () => {
 
     // Funciones auxiliares
     const handleEditProduct = (product) => {
-        setSaveStatus({ message: '', type: '' }); // Limpiar mensajes de estado
         setEditingProduct(product);
         setActiveTab('create');
     };
@@ -112,13 +117,13 @@ const AdminPage = () => {
             <div className="tab-buttons">
                 <button
                     className={`tab-btn ${activeTab === 'create' ? 'active' : ''}`}
-                    onClick={() => { setSaveStatus({ message: '', type: '' }); setActiveTab('create'); setEditingProduct(null); }}
+                    onClick={() => { setActiveTab('create'); setEditingProduct(null); }}
                 >
                     {editingProduct ? 'Editar Producto' : 'Crear Producto'}
                 </button>
                 <button
                     className={`tab-btn ${activeTab === 'list' ? 'active' : ''}`}
-                    onClick={() => { setSaveStatus({ message: '', type: '' }); setActiveTab('list'); }}
+                    onClick={() => setActiveTab('list')}
                 >
                     Listado de Productos
                 </button>
@@ -126,7 +131,7 @@ const AdminPage = () => {
 
             {/* Mensajes de estado (Éxito/Error al guardar) */}
             {saveStatus.message && (
-                <p className={`status-message ${saveStatus.type === 'error' ? 'error' : saveStatus.type === 'success' ? 'success' : 'info'}`}>
+                <p className={`status-message ${saveStatus.type === 'error' ? 'error' : 'success'}`}>
                     {saveStatus.message}
                 </p>
             )}
@@ -136,7 +141,7 @@ const AdminPage = () => {
                     <ProductForm
                         initialData={editingProduct}
                         onSave={(data) => handleSaveProduct(data, !!editingProduct)}
-                        onCancel={() => { setSaveStatus({ message: '', type: '' }); setActiveTab('list'); setEditingProduct(null); }}
+                        onCancel={() => { setActiveTab('list'); setEditingProduct(null); }}
                     />
                 ) : (
                     <div className="product-list">
@@ -146,7 +151,7 @@ const AdminPage = () => {
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Nombre</th> 
+                                    <th>Título</th>
                                     <th>Precio</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -169,7 +174,6 @@ const AdminPage = () => {
                                 ))}
                             </tbody>
                         </table>
-                        {!products.length && !loading && !error && <p>No hay productos disponibles.</p>}
                     </div>
                 )}
             </div>
@@ -196,15 +200,6 @@ const AdminPage = () => {
                     background-color: #bee5eb;
                     color: #0c5460;
                     border: 1px solid #b8daff;
-                }
-                /* Estilo para mensajes de error que aparecen en el listado */
-                .error-message-inline {
-                    color: #721c24;
-                    background-color: #f8d7da;
-                    padding: 8px;
-                    border-radius: 4px;
-                    margin-bottom: 15px;
-                    border: 1px solid #f5c6cb;
                 }
             `}</style>
         </div>
