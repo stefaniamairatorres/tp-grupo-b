@@ -2,6 +2,10 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useState } from "react";
 import axios from "axios";
 
+// 🚨 CRÍTICO: Obtener la URL del Backend (Render)
+// Esta variable DEBE estar configurada en Vercel como VITE_BACKEND_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
 const CheckoutForm = ({ cart }) => {
     const stripe = useStripe();
     const elements = useElements();
@@ -12,11 +16,28 @@ const CheckoutForm = ({ cart }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // ** Verificación de URL **
+        if (!BACKEND_URL) {
+            console.error("ERROR CRÍTICO: La variable de entorno VITE_BACKEND_URL no está configurada en Vercel.");
+            alert("No se puede conectar al servidor. Configuración de URL de API faltante.");
+            setLoading(false);
+            return;
+        }
+
+        if (!stripe || !elements) {
+            console.error("Stripe no está inicializado.");
+            alert("El servicio de Stripe no está disponible.");
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
 
         try {
             // 1️⃣ Crear PaymentIntent en el backend
-            const res = await axios.post("/api/payment/create-payment-intent", {
+            // 🚨 USANDO RUTA ABSOLUTA DE RENDER
+            const res = await axios.post(`${BACKEND_URL}/api/payment/create-payment-intent`, {
                 amount: total * 100 // Stripe trabaja en centavos
             });
 
@@ -30,9 +51,8 @@ const CheckoutForm = ({ cart }) => {
             });
 
             if (result.error) {
-                console.error(result.error.message);
-                setLoading(false);
-                alert("Error en el pago: " + result.error.message);
+                console.error("Error de Stripe (Cliente):", result.error.message);
+                alert("Error en el pago: " + result.error.message); 
                 return;
             }
 
@@ -41,8 +61,8 @@ const CheckoutForm = ({ cart }) => {
                 window.location.href = "/success";
             }
         } catch (error) {
-            console.error("Stripe error:", error);
-            alert("Hubo un problema con el pago.");
+            console.error("Error al llamar a la API de pago (Red/Backend):", error.message);
+            alert("Hubo un problema al conectar con el servidor de pago. (Verifica URL y CORS)");
         }
 
         setLoading(false);
@@ -50,10 +70,21 @@ const CheckoutForm = ({ cart }) => {
 
     return (
         <form onSubmit={handleSubmit} className="stripe-form">
-            <h3>Información de pago</h3>
+            <h3>Total a pagar: ${total.toFixed(2)}</h3>
 
             <div className="card-element-box">
-                <CardElement />
+                <CardElement 
+                    options={{
+                        style: {
+                            base: {
+                                fontSize: '16px',
+                                color: '#424770',
+                                '::placeholder': { color: '#aab7c4' },
+                            },
+                            invalid: { color: '#9e2146' },
+                        },
+                    }}
+                />
             </div>
 
             <button
