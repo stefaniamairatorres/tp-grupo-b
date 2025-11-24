@@ -80,7 +80,7 @@ const AdminPage = () => {
     // 3. FUNCIÓN REAL DE ELIMINACIÓN
     const handleDeleteProduct = async (id) => {
         // CORRECCIÓN: Usar un modal o un mensaje dentro del UI en lugar de window.confirm()
-        // Por simplicidad, mantendremos window.confirm, pero en producción se evita.
+        // En un entorno profesional, se evitaría window.confirm()
         if (window.confirm('¿Estás seguro de eliminar este producto?')) {
             try {
                 await axios.delete(`/api/products/${id}`);
@@ -157,21 +157,27 @@ const AdminPage = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {products.map(product => (
-                                    <tr key={product._id}>
-                                        <td>{product._id}</td> 
-                                        <td>{product.name}</td> 
-                                        <td>${product.price ? product.price.toFixed(2) : 'N/A'}</td> 
-                                        <td>
-                                            <button onClick={() => handleEditProduct(product)} className="btn-edit">
-                                                Editar
-                                            </button>
-                                            <button onClick={() => handleDeleteProduct(product._id)} className="btn-delete">
-                                                Eliminar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {products.map(product => {
+                                    // FIX CRÍTICO: Asegurar que el precio es numérico antes de llamar a toFixed
+                                    const displayPrice = (Number(product?.price) || 0).toFixed(2);
+
+                                    return (
+                                        <tr key={product._id}>
+                                            <td>{product._id}</td> 
+                                            <td>{product.name}</td> 
+                                            {/* Usamos el precio ya corregido */}
+                                            <td>${displayPrice}</td> 
+                                            <td>
+                                                <button onClick={() => handleEditProduct(product)} className="btn-edit">
+                                                    Editar
+                                                </button>
+                                                <button onClick={() => handleDeleteProduct(product._id)} className="btn-delete">
+                                                    Eliminar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
