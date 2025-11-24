@@ -38,7 +38,7 @@ const CheckoutForm = ({ cart }) => {
             // 1️⃣ Crear PaymentIntent en el backend
             // 🚨 USANDO RUTA ABSOLUTA DE RENDER
             const res = await axios.post(`${BACKEND_URL}/api/payment/create-payment-intent`, {
-                amount: total * 100 // Stripe trabaja en centavos
+                amount: total // Stripe trabaja en centavos
             });
 
             const clientSecret = res.data.clientSecret;
