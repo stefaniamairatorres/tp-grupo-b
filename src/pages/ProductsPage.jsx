@@ -1,163 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ProductCard from '../components/ProductCard.jsx';
-import { useSearch } from '../context/SearchContext.jsx';
-// Importamos la variable de entorno que apunta a Render
-const API_URL = import.meta.env.VITE_BACKEND_URL;
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import ProductCard from "../components/ProductCard";
+import "./pages.css";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ProductPage = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { searchTerm } = useSearch();
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Estados para la paginación
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(8); // Número de productos por página
+  useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        const [prodRes, catRes] = await Promise.all([
+          axios.get(`${API_URL}/products`),
+          axios.get(`${API_URL}/categories`),
+        ]);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        // 🚨 CORRECCIÓN CLAVE: Usamos la URL ABSOLUTA DE RENDER
-        console.log(`📡 Cargando productos desde: ${API_URL}/api/products`);
-        
-        const response = await axios.get(`${API_URL}/api/products`);
-        
-        setProducts(response.data);
-      } catch (err) {
-        console.error("Error al cargar productos:", err);
-        setError('No se pudieron cargar los productos. Revisa que el backend esté en línea y la URL de la API sea correcta.');
-      } finally {
-        setLoading(false);
-      }
-    };
+        setProducts(prodRes.data);
+        setCategories(catRes.data);
+      } catch (err) {
+        console.error("Error cargando datos:", err);
+        setError("No se pudieron cargar los productos.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    fetchProducts();
-    // Agregamos API_URL como dependencia para evitar advertencias de React, aunque nunca cambiará.
-  }, []); 
+    fetchAll();
+  }, []);
 
-  if (loading) {
-    return <div className="page-container text-center"><p>Cargando productos...</p></div>;
-  }
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
 
-  if (error) {
-    return <div className="page-container text-center"><p className="error-message">{error}</p></div>;
-  }
+  const filteredProducts = selectedCategory
+    ? products.filter((p) => p.category === selectedCategory)
+    : products;
 
-  // Lógica de filtrado de búsqueda
-  const filteredProducts = products.filter(product =>
-    product.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  if (loading) return <p>Cargando productos...</p>;
+  if (error) return <p>{error}</p>;
 
-  // Lógica de paginación
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  return (
+    <div className="product-page">
+      {/* FILTRAR CATEGORÍAS */}
+      <div className="filter-container">
+        <select onChange={handleCategoryChange} className="filter-select">
+          <option value="">Todas las categorías</option>
+          {categories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
 
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  return (
-    <>
-        <style jsx="true">{`
-            /* Estilos mínimos para que la página se vea bien sin pages.css */
-            .page-container {
-                padding: 2rem;
-                max-width: 1200px;
-                margin: 0 auto;
-                font-family: 'Inter', sans-serif;
-            }
-            .product-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 1.5rem;
-                margin-top: 2rem;
-            }
-            .pagination {
-                display: flex;
-                justify-content: center;
-                gap: 0.5rem;
-                margin-top: 3rem;
-                padding-bottom: 2rem;
-            }
-            .pagination-btn {
-                padding: 0.5rem 1rem;
-                border: 1px solid #007bff;
-                border-radius: 0.5rem;
-                background-color: #f9f9f9;
-                color: #007bff;
-                cursor: pointer;
-                transition: all 0.2s;
-                font-weight: 500;
-            }
-            .pagination-btn:hover:not(:disabled) {
-                background-color: #e9ecef;
-            }
-            .pagination-btn.active {
-                background-color: #007bff;
-                color: white;
-                border-color: #007bff;
-            }
-            .pagination-btn:disabled {
-                cursor: not-allowed;
-                opacity: 0.6;
-                background-color: #f1f1f1;
-                border-color: #ccc;
-                color: #888;
-            }
-            .error-message {
-                color: #dc3545;
-                font-weight: bold;
-                padding: 1rem;
-                background: #f8d7da;
-                border: 1px solid #f5c6cb;
-                border-radius: 0.5rem;
-            }
-            .text-center {
-                text-align: center;
-            }
-        `}</style>
-
-        <div className="page-container">
-            <h1 style={{ textAlign: 'center' }}>Todos los productos</h1>
-            <p style={{ textAlign: 'center', color: '#ccc' }}>Encuentra lo que buscas en nuestra tienda</p>
-            
-            <div className="product-grid">
-                {currentProducts.map(product => (
-                    <ProductCard key={product._id || product.id} product={product} />
-                ))}
-            </div>
-
-            {/* Botones de paginación */}
-            <div className="pagination">
-                <button 
-                    onClick={() => paginate(currentPage - 1)} 
-                    disabled={currentPage === 1}
-                    className="pagination-btn"
-                >
-                    Anterior
-                </button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                        key={index + 1}
-                        onClick={() => paginate(index + 1)}
-                        className={`pagination-btn ${currentPage === index + 1 ? 'active' : ''}`}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-                <button 
-                    onClick={() => paginate(currentPage + 1)} 
-                    disabled={currentPage === totalPages}
-                    className="pagination-btn"
-                >
-                    Siguiente
-                </button>
-            </div>
-        </div>
-    </>
-  );
+      {/* LISTA DE PRODUCTOS */}
+      <div className="product-grid">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))
+        ) : (
+          <p>No hay productos disponibles.</p>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ProductPage;
