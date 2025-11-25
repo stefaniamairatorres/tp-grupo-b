@@ -5,7 +5,7 @@ import "./pages.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const ProductPage = () => {
+const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -72,4 +72,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default ProductsPage;
