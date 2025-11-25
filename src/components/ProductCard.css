@@ -1,17 +1,12 @@
-
-
-/* --- Estilos base de la tarjeta --- */
-
+/* --- Tarjeta del producto --- */
 .product-card {
-  text-align: center; 
-  background-color: #2c3e50; 
-  border-radius: 10px;
+  text-align: center;
+  background-color: #2c3e50;
+  border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  padding: 10px;
-
-  /* 👇 fixes importantes */
-  width: 260px;
-  margin: 10px auto;
+  padding: 12px;
+  width: 250px;
+  margin: 12px auto;
   transition: transform 0.2s ease;
 }
 
@@ -19,83 +14,59 @@
   transform: scale(1.03);
 }
 
+/* --- Imagen --- */
 .product-image-container {
   width: 100%;
-  height: 220px;
+  height: 200px;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 8px;
 }
-
 
 .product-image {
   width: 100%;
-  height: 220px;        /* 👈 controla el tamaño */
-  object-fit: cover;    /* 👈 recorta sin deformar */
-  border-radius: 5px;
+  height: 200px;
+  object-fit: cover;  /* Mantiene proporción */
+  border-radius: 8px;
 }
 
-
+/* --- Texto del producto --- */
 .product-title {
-  color: white;
+  color: #ffffff;
   margin-top: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .product-price {
-  color: #00bcd4; 
+  color: #00eaff;
   font-weight: bold;
   font-size: 1.2rem;
-  margin: 10px 0;
+  margin: 8px 0 12px;
 }
 
-.add-to-cart-btn {
-  background-color: #1abc9c; 
+/* --- Botón --- */
+.btn-add-cart {
+  background-color: #1abc9c;
   color: white;
-  padding: 10px 20px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 10px;
+  transition: all 0.15s ease-out;
+  font-size: 1rem;
+  width: 100%;
 }
 
-/* --- ESTILOS PARA QUE LA DESCRIPCIÓN QUEDE CENTRADA Y PROLIJA --- */
-
-.product-description-visible {
-  text-align: center; 
-  max-width: 90%; 
-  margin-left: auto;
-  margin-right: auto;
-  color: #ccc; 
-  font-size: 0.95rem;
-  padding: 10px 0 5px 0;
+/* Efecto pulsación */
+.btn-add-cart.clicked {
+  background-color: #148f72;
+  transform: scale(0.95);
+  box-shadow: none;
 }
 
-/* --- Nuevos Estilos para el Feedback Visual (Pulsación) --- */
-
-/* 1. Transición: Hace que todos los cambios de estado sean suaves y rápidos */
-.add-to-cart-btn {
-    /* Mantenemos el color original */
-    background-color: #1abc9c; 
-    /* Añadimos la transición para suavizar el efecto */
-    transition: all 0.15s ease-out; 
-    /* El resto de tus estilos de botón... */
-}
-
-/* 2. Estado 'Pulsado': Lo que ocurre cuando se hace clic */
-.add-to-cart-btn.clicked {
-    /* Fondo ligeramente más oscuro para indicar la pulsación */
-    background-color: #146C43; 
-    /* Efecto de pulsación: el botón se encoge un 5% brevemente */
-    transform: scale(0.95); 
-    /* Desactivar la sombra para simular que está "presionado" */
-    box-shadow: none;
-}
-
-/* 3. Estado 'Hover': Mejora la experiencia al pasar el mouse */
-.add-to-cart-btn:hover:not(.clicked) {
-    /* Color ligeramente más claro en hover */
-    background-color: #1abc9c; 
-    /* Pequeño escalado al pasar el mouse */
-    transform: scale(1.02); 
-    /* Añade una sombra sutil */
-    box-shadow: 0 0 10px rgba(26, 188, 156, 0.5);
+/* Hover */
+.btn-add-cart:hover:not(.clicked) {
+  background-color: #1ad4b2;
+  transform: scale(1.03);
+  box-shadow: 0 0 10px rgba(26, 188, 156, 0.6);
 }
