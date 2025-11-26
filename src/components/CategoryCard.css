@@ -1,3 +1,4 @@
+/* --- Tarjeta de Categoría para Navegación --- */
 .category-card {
   position: relative;
   width: 260px;
@@ -40,10 +41,46 @@
   text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
+/* --- Grid para el listado de Categorías (Página Principal) --- */
 .category-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 25px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =================================================== */
+/* 🌟 NUEVOS ESTILOS PARA LA VISTA DE DETALLE DE CATEGORÍA */
+/* Estos reemplazan la Categoría "Gigante" en la vista de lista de productos */
+/* =================================================== */
+
+/* Banner más modesto para la cabecera de la página de categoría */
+.category-detail-banner {
+  height: 250px; /* Altura máxima razonable */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end; /* Alinear el título abajo */
+  padding: 30px;
+  margin-bottom: 40px; /* Separación del grid de productos */
+  /* Aquí debe ir la imagen de fondo de la categoría (probablemente inyectada vía style= en HTML) */
+}
+
+/* Título de la Categoría en el Banner */
+.category-detail-title {
+  color: white;
+  font-size: 3em;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Grid para el listado de Productos dentro de una Categoría */
+.products-in-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 20px;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
