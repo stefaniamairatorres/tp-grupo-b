@@ -1,51 +1,57 @@
+/* --- Tarjeta de categoría --- */
 .category-card {
     position: relative;
-    height: 350px;
-    border-radius: 10px;
+    width: 260px;              /* 👈 mismo ancho que productos */
+    height: 220px;             /* 👈 mucho más razonable */
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-    display: block; 
-    text-decoration: none; 
+    transition: transform 0.3s ease;
+    display: block;
+    text-decoration: none;
 
-    /* PROPIEDADES CLAVE PARA IMAGEN DE FONDO */
-    background-size: cover; 
+    /* Imagen de fondo */
+    background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
 }
 
 .category-card:hover {
     transform: scale(1.03);
 }
 
+/* Overlay para oscurecer la imagen por abajo y ver bien el texto */
 .category-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Gradiente para hacer visible el texto inferior */
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%);
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.3) 50%,
+        transparent 100%
+    );
     display: flex;
     justify-content: center;
-    align-items: flex-end; /* Alinea el título abajo */
-    padding-bottom: 20px;
+    align-items: flex-end;
+    padding-bottom: 15px;
 }
 
+/* Título visible y sólido */
 .category-title {
-    color: var(--color-text-light, white);
-    font-size: 1.5rem;
+    color: white !important;       /* 👈 fuerza blanco real */
+    font-size: 1.3rem;
     font-weight: bold;
     text-transform: capitalize;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
-/* Estilo para la cuadrícula en HomePage.jsx */
+/* Grid de categorías */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    padding: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
