@@ -72,3 +72,14 @@
   transform: scale(1.03);
   box-shadow: 0 0 10px rgba(26, 188, 156, 0.6);
 }
+
+/* Cambiar color del nombre y precio a negro */
+.product-title {
+  color: #000 !important;
+  text-shadow: none !important;
+}
+
+.product-price {
+  color: #000 !important;
+  text-shadow: none !important;
+}
